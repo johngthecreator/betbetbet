@@ -1,7 +1,12 @@
+import os
+
 from celery import Celery
+from dotenv import load_dotenv
 
 from agent import shop_bot
 from schemas import UserQuery
+
+load_dotenv()
 
 # Run it with
 # spawns new threads instead of processes since agent orchestration is I/O bound
@@ -9,7 +14,9 @@ from schemas import UserQuery
 # limit the number of concurrent worker processes
 # uv run celery -A tasks worker --pool=threads --concurrency=10 --loglevel=info
 
-app = Celery('tasks', broker='redis://localhost:6379/0', backend='redis://localhost:6379/1')
+REDIS_URL = os.getenv("REDIS_URL")
+
+app = Celery('tasks', broker=f"{REDIS_URL}/0", backend=f"{REDIS_URL}/1")
 
 @app.task
 def agent_call(user_query: dict):
