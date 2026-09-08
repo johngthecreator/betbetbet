@@ -10,3 +10,8 @@ wheels/
 .venv
 .env
 .DS_Store
+
+# Node artifacts from `railway config` (Node is only needed for the .ts IaC variant)
+node_modules/
+package.json
+package-lock.json
