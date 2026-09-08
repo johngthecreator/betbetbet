@@ -22,7 +22,8 @@ load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 
 scheduler = AsyncIOScheduler(
-  jobstores={"default": SQLAlchemyJobStore(url=DB_URL)}
+  jobstores={"default": SQLAlchemyJobStore(url=DB_URL)},
+  timezone="America/Denver"
 )
 
 def check_discounts():
