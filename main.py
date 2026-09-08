@@ -9,13 +9,12 @@ from sqlmodel import Session, update
 from dataclasses import asdict
 
 from models import Sale
-from db import engine
+from db import DB_URL, engine
 from discord_bot import bot
 
 load_dotenv()
 
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-DB_URL = os.getenv("DB_URL")
 
 scheduler = AsyncIOScheduler(
   jobstores={"default": SQLAlchemyJobStore(url=DB_URL)}
