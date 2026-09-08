@@ -12,16 +12,20 @@ def main(ctx=None):
     db = postgres("Postgres")
     cache = redis("Redis")
 
-    # The SDK only supports a plain literal string or a single reference per
-    # env var — no composing multiple refs into one string. DB_URL and CP_URL
-    # both just point at the raw Postgres.DATABASE_URL; the +psycopg dialect
-    # rewrite SQLAlchemy needs happens in db.py instead.
+    # The SDK's ref objects (db.env["X"]) only support a single reference per
+    # env var — no composing multiple refs into one string. Railway's classic
+    # ${{Service.VAR}} template syntax still works as a plain literal string
+    # though (resolved server-side), so build the +psycopg-prefixed URL that
+    # way instead of trying to do it client-side in Python.
     shared_env = {
         "DISCORD_TOKEN": preserve(),
         "GOOGLE_API_KEY": preserve(),
         "BRIGHTDATA_API_KEY": preserve(),
+        # psycopg_pool wants the plain libpq-style URL Postgres hands out
         "CP_URL": db.env["DATABASE_URL"],
-        "DB_URL": db.env["DATABASE_URL"],
+        # SQLAlchemy's create_engine needs the +psycopg dialect prefix, or it
+        # defaults to looking for psycopg2 (not installed)
+        "DB_URL": "postgresql+psycopg://${{Postgres.PGUSER}}:${{Postgres.PGPASSWORD}}@${{Postgres.PGHOST}}:${{Postgres.PGPORT}}/${{Postgres.PGDATABASE}}",
     }
 
     # `limits=` isn't a real field (silently dropped) — the actual schema key
