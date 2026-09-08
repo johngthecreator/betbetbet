@@ -35,7 +35,7 @@ def main(ctx=None):
         source=repo,
         start="uv run python main.py",
         env=shared_env,
-        deploy={"limitOverride": {"containers": {"cpu": 0.5, "memoryBytes": 512 * 1024 * 1024}}},
+        deploy={"limitOverride": {"containers": {"cpu": 1, "memoryBytes": 1024 * 1024 * 1024}}},
     )
 
     worker = service(
@@ -43,7 +43,7 @@ def main(ctx=None):
         source=repo,
         start="uv run celery -A tasks worker --pool=threads --concurrency=10 --loglevel=info",
         env={**shared_env, "REDIS_URL": cache.env["REDIS_URL"]},
-        deploy={"limitOverride": {"containers": {"cpu": 1, "memoryBytes": 512 * 1024 * 1024}}},
+        deploy={"limitOverride": {"containers": {"cpu": 1, "memoryBytes": 1024 * 1024 * 1024}}},
     )
 
     return project("betbetbet", resources=[group("app", [db, cache, bot, worker])])
