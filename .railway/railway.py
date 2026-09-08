@@ -26,6 +26,11 @@ def main(ctx=None):
         # SQLAlchemy's create_engine needs the +psycopg dialect prefix, or it
         # defaults to looking for psycopg2 (not installed)
         "DB_URL": "postgresql+psycopg://${{Postgres.PGUSER}}:${{Postgres.PGPASSWORD}}@${{Postgres.PGHOST}}:${{Postgres.PGPORT}}/${{Postgres.PGDATABASE}}",
+        # bot needs this too — it publishes tasks via agent_call.delay(), which
+        # goes through the same Celery app/broker tasks.py defines. Without it,
+        # tasks.py falls back to redis://localhost:6379, which doesn't exist in
+        # the bot's container, so dispatched tasks silently never reach worker.
+        "REDIS_URL": cache.env["REDIS_URL"],
     }
 
     # `limits=` isn't a real field (silently dropped) — the actual schema key
@@ -42,7 +47,7 @@ def main(ctx=None):
         "worker",
         source=repo,
         start="uv run celery -A tasks worker --pool=threads --concurrency=10 --loglevel=info",
-        env={**shared_env, "REDIS_URL": cache.env["REDIS_URL"]},
+        env=shared_env,
         deploy={"limitOverride": {"containers": {"cpu": 1, "memoryBytes": 1024 * 1024 * 1024}}},
     )
 
