@@ -8,6 +8,7 @@ class BrandEnum(str, Enum):
     patagonia = "patagonia"
     gymshark = "gymshark"
     urban_outfitters = "urban_outfitters"
+    allsaints = "allsaints"
 
 
 class UserQuery(BaseModel):

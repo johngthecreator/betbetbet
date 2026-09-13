@@ -34,6 +34,7 @@ Note on size/stock data per retailer's PDP parser:
 """
 
 from . import (
+    allsaints_parser,
     gymshark_detail_parser,
     gymshark_parser,
     nike_detail_parser,
@@ -44,6 +45,7 @@ from . import (
     urbanoutfitters_detail_parser,
     urbanoutfitters_parser,
 )
+from .allsaints_parser import parse_products as parse_allsaints_products
 from .gymshark_detail_parser import ProductDetail as GymsharkProductDetail
 from .gymshark_detail_parser import SizeOption as GymsharkSizeOption
 from .gymshark_detail_parser import parse_product_detail as parse_gymshark_product_detail
@@ -71,6 +73,7 @@ from .urbanoutfitters_parser import ColorSwatch as UrbanOutfittersColorSwatch
 from .urbanoutfitters_parser import parse_products as parse_urbanoutfitters_products
 
 __all__ = [
+    "allsaints_parser",
     "gymshark_parser",
     "gymshark_detail_parser",
     "nike_parser",
@@ -83,6 +86,7 @@ __all__ = [
     # normalized (cross-retailer common shape, returned by every parse_*_products)
     "NormalizedProduct",
     # listing (PLP)
+    "parse_allsaints_products",
     "parse_gymshark_products",
     "NikeColorway",
     "parse_nike_products",

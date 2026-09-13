@@ -2,6 +2,7 @@ import os
 import asyncio
 from dotenv import load_dotenv
 from parsers import (
+    parse_allsaints_products,
     parse_gymshark_products,
     parse_nike_products,
     parse_patagonia_products,
@@ -36,6 +37,8 @@ def check_discounts():
             {"url": "https://www.gymshark.com/collections/last-chance/womens", "parser": parse_gymshark_products, "department": "women", "source":"gymshark"},
             {"url": "https://www.patagonia.com/shop/web-specials/mens", "parser": parse_patagonia_products, "department": "men", "source":"patagonia"},
             {"url": "https://www.patagonia.com/shop/web-specials/womens", "parser": parse_patagonia_products, "department": "women", "source":"patagonia"},
+            {"url": "https://www.allsaints.com/us/men/sale?start=96&sz=24", "parser": parse_allsaints_products, "department": "men", "source":"allsaints"},
+            {"url": "https://www.allsaints.com/us/women/sale?start=96&sz=24", "parser": parse_allsaints_products, "department": "women", "source":"allsaints"},
             ]
     for seller in sellers:
         response = brightdata_scraper(seller["url"])
