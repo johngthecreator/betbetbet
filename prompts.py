@@ -7,6 +7,20 @@ reliable than a single system prompt trying to cover every tool's format at
 once, and keeps call_tool() readable as more tools get added.
 """
 
+# Appended to every format instruction below. discord_bot.py sends the
+# model's whole response as a single embed, so if the model repeats itself
+# (e.g. restates the list or product summary a second time in the same
+# reply), the user sees that duplicate inline in one Discord message. This
+# is a prompt-level stopgap -- it doesn't catch every case (e.g. two
+# separately near-identical write-ups). A real fix (e.g. detecting and
+# stripping duplicate content in the output before sending) is TODO --
+# see README's "Known limitations".
+_DEDUPE_NOTE = """
+Write your answer once. Before finishing, check that you haven't repeated \
+the same sentence, list, or summary twice in this reply -- if you have, \
+remove the duplicate and send it only once.
+"""
+
 GET_PRODUCT_DETAIL_FORMAT = """\
 Format the product data below for the user. Always include:
 - A link to the product.
@@ -16,7 +30,7 @@ Format the product data below for the user. Always include:
 - A short note at the end for anything else notable you noticed in the data \
 (e.g. limited colorways, low stock, a size guide callout) -- only include this \
 if there's actually something worth mentioning, don't force it.
-
+""" + _DEDUPE_NOTE + """
 Product data:
 """
 
@@ -30,6 +44,6 @@ Tell the user they can reply with a product's number to get full details on \
 it (sizes, colors, price breakdown, etc.).
 
 Return this as plain numbered text, not a table.
-
+""" + _DEDUPE_NOTE + """
 Product data:
 """

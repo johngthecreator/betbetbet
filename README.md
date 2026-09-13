@@ -42,3 +42,14 @@ Tests are parametrized by retailer, so you can rerun just one with `-k` (valid i
 ```bash
 uv run pytest tests/test_parsers_integration.py -k allsaints -v
 ```
+
+## Known limitations
+
+- **Duplicate replies**: the Discord bot sends the agent's whole response as one embed
+  (`discord_bot.py`), so if the model repeats itself in a single generation, the user sees
+  that duplicate inline in one message. Current mitigation is a prompt-level instruction
+  telling the model not to repeat itself (`prompts.py`'s `_DEDUPE_NOTE`) -- it's a stopgap,
+  not a guarantee. A real fix (detecting/stripping duplicate content before sending) is
+  planned.
+- **No guardrails yet** on the agent (prompt-injection resistance, output validation,
+  rate limiting, etc.) -- planned, not yet implemented.
